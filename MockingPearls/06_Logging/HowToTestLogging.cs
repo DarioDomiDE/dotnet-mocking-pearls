@@ -2,7 +2,7 @@
 using Moq;
 using Xunit;
 
-namespace MockingPearls._07_Logging;
+namespace MockingPearls._06_Logging;
 
 public class MyController : ControllerBase
 {

@@ -1,7 +1,7 @@
 ﻿using Moq;
 using Xunit;
 
-namespace MockingPearls._00_ExtensionMethod;
+namespace MockingPearls._04_ExtensionMethod;
 
 public class MyService
 {

@@ -1,7 +1,7 @@
 ﻿using Moq;
 using Xunit;
 
-namespace MockingPearls._08_Delegate_vs_Mocking;
+namespace MockingPearls._07_Delegate_vs_Mocking;
 
 public interface IProcessStatusSender
 {

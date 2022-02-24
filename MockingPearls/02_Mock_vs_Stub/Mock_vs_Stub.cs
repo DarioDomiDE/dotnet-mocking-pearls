@@ -3,58 +3,104 @@ using Xunit;
 
 namespace MockingPearls._02_Mock_vs_Stub;
 
-public interface IAnotherService
+/*
+ Mock vs Stub (vs fake vs spy vs dummy)
+
+ Test Double is the general term for:
+    - Mocks
+    - Stubs
+    - Fakes
+ But informally, you'll often hear people simply call them mocks.
+ */
+
+public interface IUserService
 {
-    string AnyMethod();
+    string GetUser(string value);
 }
 
-public class AnotherService : IAnotherService
+public class UserService : IUserService
 {
-    public string AnyMethod()
+    public string GetUser(string value)
     {
-        return "Hello Universe";
+        return value + "Hello Universe";
     }
 }
 
 public class MainService
 {
-    private readonly IAnotherService _service;
+    private readonly IUserService _service;
 
-    public MainService(IAnotherService service)
+    public MainService(IUserService service)
     {
         _service = service;
     }
 
-    public string AnyMethod()
+    public string GetUser(string value)
     {
-        return _service.AnyMethod();
+        return _service.GetUser(value);
     }
 }
 
 public class HowToDummy
 {
+    private class FakeUserService : IUserService
+    {
+        public string GetUser(string value)
+        {
+            return "Custom Implementation";
+        }
+    }
+
     [Fact]
-    public void RunMyController_ShouldWhatever()
+    public void RunMyController_ShouldNotBeNull()
     {
         // Arrange
         var message = "Hello Team";
         // -----
-        var mock = new Mock<IAnotherService>();
+        // 1) Mock
+        // It defines an expectation of how it will be used
+        // Main task is to validate/assert correct output based on input
+        // It will cause a failure if the expectation isn’t met.
+        var mock = new Mock<IUserService>();
+        mock.Setup(x => x.GetUser(It.IsAny<string>())).Returns(message);
         // -----
-        var stub = new Mock<IAnotherService>();
-        stub.Setup(x => x.AnyMethod()).Returns(message);
+        // 2) Stub
+        // Is an object that provides fake data.
+        // A stub is an implementation that behaves "unnaturally"
+        // It can be an own class as well.
+        var stub = new Mock<IUserService>();
+        stub.Setup(x => x.GetUser(It.IsAny<string>())).Throws<Exception>();
         // -----
-        //var dummy = null;
+        // 3) Spy
+        // It records information about how the class is being used.
+        // It can be an own class as well.
+        var spy = new Mock<IUserService>();
+        var data = new List<string>();
+        spy.Setup(h => h.GetUser(It.IsAny<string>()))
+            .Callback<string>(x => data.Add(x))
+            .Returns(message);
         // -----
-        //var fake = null;
+        // 4) Dummy
+        // It is used as a placeholder for a parameter.
+        var dummy = new Mock<IUserService>();
         // -----
-        //var realClass = new AnotherService();
-        var controller = new MainService(mock.Object);
+        // 5) Fake
+        // an actual object with limited capabilities
+        // e.g. a fake web service
+        var fake = new FakeUserService();
+        // -----
+        // 6) Real Implementation
+        var realClass = new UserService();
+        // -----
+        var controller = new MainService(spy.Object);
 
         // Act 
-        var result = controller.AnyMethod();
+        var result = controller.GetUser("test");
 
         // Assert
-        //Assert.NotNull(result);
+        Assert.NotNull(result);
+        Assert.Equal(message, result);
+        Assert.Equal(1, data.Count);
+        Assert.Equal("test", data[0]);
     }
 }
