@@ -3,15 +3,8 @@ using Xunit;
 
 namespace MockingPearls._02_Mock_vs_Stub;
 
-/*
- Mock vs Stub (vs fake vs spy vs dummy)
+/*** Mock vs Stub (vs Fake vs Spy vs Dummy) ***/
 
- Test Double is the general term for:
-    - Mocks
-    - Stubs
-    - Fakes
- But informally, you'll often hear people simply call them mocks.
- */
 
 public interface IUserService
 {

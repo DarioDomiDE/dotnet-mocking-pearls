@@ -77,6 +77,8 @@ public class GetDataTest
         var result = service.GetData();
 
         // Assert
+        Assert.Equal("ABCDEFGHI", result);
+        Assert.NotEqual("ABC", result);
         Assert.StartsWith("AB", result);
         Assert.EndsWith("HI", result);
         Assert.Contains("EF", result);
@@ -96,10 +98,15 @@ public class GetDataTest_WithFluentAssertions
         var result = service.GetData();
 
         // Assert
+        result.Should().Be("ABCDEFGHI", result);
+        result.Should().NotBe("ABC", result);
         result.Should()
               .StartWith("AB")
-              .And.EndWith("HI")
-              .And.Contain("EF")
-              .And.HaveLength(9);
+              .And
+              .EndWith("HI")
+              .And
+              .Contain("EF")
+              .And
+              .HaveLength(9);
     }
 }

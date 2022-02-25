@@ -22,6 +22,8 @@ public class MyController : ControllerBase
     }
 }
 
+
+
 public class HowToTestLoggingTheHardWay
 {
     [Fact]
@@ -134,6 +136,7 @@ public class HowToTestLoggingTheEasyWay
             x.LogInformation(
                 It.Is<string>(x => x == expectedLogMessage)
             ), Times.Once);
+
         logWrapper.Verify(x =>
             x.LogCreateUserFailed(
                 It.Is<int>(x => x == userId)

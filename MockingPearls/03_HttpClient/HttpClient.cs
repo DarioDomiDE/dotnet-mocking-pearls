@@ -26,7 +26,7 @@ class MyService
 
 public class HttpClientTest
 {
-    private HttpClient BuildHttpClient(HttpContent content)
+    private Mock<HttpMessageHandler> BuildHttpClient(HttpContent content)
     {
         var response = new HttpResponseMessage
         {
@@ -39,9 +39,7 @@ public class HttpClientTest
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(response);
-        var httpClient = new HttpClient(mockHttpMessageHandler.Object);
-        httpClient.BaseAddress = new Uri("https://www.wharever-it-wont_be.called/");
-        return httpClient;
+        return mockHttpMessageHandler;
     }
 
     [Fact]
@@ -50,7 +48,10 @@ public class HttpClientTest
         // Arrange
         var message = "this is the response";
         var httpContent = new StringContent(message);
-        var httpClient = BuildHttpClient(httpContent);
+        var handler = BuildHttpClient(httpContent);
+        using var httpClient = new HttpClient(handler.Object);
+        httpClient.BaseAddress = new Uri("https://www.wharever-it-wont_be.called/");
+
         var serviceInfoClient = new MyService(httpClient);
 
         // Act
@@ -59,5 +60,7 @@ public class HttpClientTest
         // Assert
         Assert.NotNull(response);
         Assert.Equal(message, response);
+
+        // still Disadvantage: that HttpClient will not be disposed correctly
     }
 }

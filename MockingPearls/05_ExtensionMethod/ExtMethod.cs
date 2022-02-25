@@ -20,7 +20,12 @@ public static class StringExtensions
 }
 
 
+
+
+
 /*** Problem so far: Not testable at all ***/
+
+
 
 
 
@@ -46,7 +51,7 @@ public class CustomLogger : ICustomLogger
     }
 }
 
-public static class IntExtensions
+public static class StringExtensions2
 {
     private static readonly ICustomLogger _defaultImplementation = new CustomLogger();
     public static ICustomLogger Implementation = _defaultImplementation;
@@ -67,10 +72,10 @@ public class TestPunctuation
     [Fact]
     public void Test()
     {
-        // Arrage
+        // Arrange
         var input = "Test Any String";
         var logger = new Mock<ICustomLogger>();
-        IntExtensions.Implementation = logger.Object;
+        StringExtensions2.Implementation = logger.Object;
         var service = new MyService2();
 
         // Act
@@ -78,6 +83,6 @@ public class TestPunctuation
 
         // Assert
         logger.Verify(x => x.LogString(It.Is<string>(x => x == input)), Times.Once());
-        IntExtensions.RevertToDefaultImplementation();
+        StringExtensions2.RevertToDefaultImplementation();
     }
 }

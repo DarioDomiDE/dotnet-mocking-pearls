@@ -4,6 +4,13 @@ using Xunit;
 
 namespace MockingPearls._08_Databases;
 
+/*
+    # Prerequirements
+
+    Alle DB-usage in Repos
+    Repos immer mocken, um Services zu testen
+
+ */
 public class MyDbContext : DbContext
 {
     public MyDbContext(DbContextOptions<MyDbContext> options)
@@ -77,17 +84,21 @@ public class DatabaseTest
 }
 
 /*
+    
+    # Possibilites
 
     Real DB
         Ständig sich selbst und Anderen in die Quere kommen
 
     InMemory
-        SQLite kann ich Relationen
-        SQL Server kann keine Relations
+        Kann keine kompleren/relationen Abhängigkeiten
 
     DB File
         Vordefinieren von komplexen Zuständen / großen Daten
         in SQLite möglich, in SQL Server nicht
+
+    tSQLt
+        wenn Stored Procedures
 
     Mocking von DbContext und DbSet
         Struggle
